@@ -91,7 +91,7 @@ import MyInput from './components/UI/MyInput.vue';
     }, 
     methods: {
       createPost(post) {
-        this.posts.push(post);
+        // this.posts.push(post);
         this.dialogVisible = false
       },  
       inputValue(event) {
@@ -113,9 +113,9 @@ import MyInput from './components/UI/MyInput.vue';
               _limit: this.limit,
             }
           })
-          this.totalPages = Math.ceil(response.headers['x-total-count'] / this.limit)
+          // this.totalPages = Math.ceil(response.headers['x-total-count'] / this.limit) // такого header нет в ответе, поэтому ошибка размера массива
           console.log(response)
-          this.posts = response.data.data
+          this.posts.push(response.data.data)
         } catch(e) {
             alert('Error')
         } finally {
@@ -125,7 +125,7 @@ import MyInput from './components/UI/MyInput.vue';
     }, 
     mounted() {
       this.fetchPosts()
-      console.log(this.posts)
+      // console.log(this.posts)
     }, 
 
     watch: {
