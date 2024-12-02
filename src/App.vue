@@ -91,7 +91,7 @@ import MyInput from './components/UI/MyInput.vue';
     }, 
     methods: {
       createPost(post) {
-        // this.posts.push(post);
+        this.posts.push(post);
         this.dialogVisible = false
       },  
       inputValue(event) {
