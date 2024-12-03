@@ -141,7 +141,7 @@ import MyInput from './components/UI/MyInput.vue';
       }, 
       sortedAndSearchedPosts() {
         // return this.selectedSortedPosts.filter(post => post.name.includes(this.searchQuery))
-        return this.posts.filter(p => p.name?.includes(this.searchQuery) || p.year == this.searchQuery);
+        return this.posts.filter(p => p.name?.toLowerCase().includes(this.searchQuery) || p.year == this.searchQuery);
       } 
     },
 
