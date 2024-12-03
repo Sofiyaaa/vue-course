@@ -25,7 +25,7 @@
     </my-dialog>
     <post-list
       @remove="removePost"
-      v-bind:posts="posts"   
+      :posts="sortedAndSearchedPosts"  
       v-if="!isPostsLoadind"   
     /> <!-- Привязываем посты к компоненту через v-bind, они улетят в PostList в качестве пропсов. Короткая запись :posts="posts" -->
     <div v-else>Идет загрузка...</div>
@@ -129,21 +129,21 @@ import MyInput from './components/UI/MyInput.vue';
     }, 
 
     watch: {
-      selectedSort(newValue) {
-        this.posts.sort((post1, post2) => {
-          return post1[this.selectedSort]?.localeCompare(post2[this.selectedSort])
-        })
+      selectedSort() {
+        this.posts.sort((post1, post2) => post1.year - post2.year)     
       }
     },
 
-    // computed: {
-    //   sortedPosts() {
-    //     return [...this.posts].sort((post1, post2) => post1[this.selectedSort]?.localeCompare(post2[this.selectedSort]))
-    //   }, 
-    //   sortedAndSearchedPosts() {
-    //     return this.sortedPosts.filter(post => post.title.toLowerCase().includes(this.searchQuery.toLowerCase()))
-    //   } 
-    // },
+    computed: {
+      selectedSortedPosts() {
+        // return [...this.posts].sort((post1, post2) => post1.name === post2.name)
+        return [...this.posts].reverse();
+      }, 
+      sortedAndSearchedPosts() {
+        // return this.selectedSortedPosts.filter(post => post.name.includes(this.searchQuery))
+        return this.posts.filter(p => p.name?.includes(this.searchQuery) || p.year == this.searchQuery);
+      } 
+    },
 
   }
 </script>
