@@ -1,26 +1,26 @@
 <template>
-    <select class="select" :value="modelValue" @change="changeOption">
-        <option disabled value="">Выберите из списка</option>
+    <select :value="modelValue" @change="changeOption">
+        <option disabled value="">Выберите сортировку</option>
         <option 
             v-for="option in options" 
-            :key="option.value" 
+            :key="option.value"
             :value="option.value"
         >
-            {{option.name}}
+            {{ option.name }}
         </option>
     </select>
 </template>
 
 <script>
 export default {
-    name: 'my-select', 
+    name: "my-select", 
     props: {
         modelValue: {
             type: String,
         },
         options: {
             type: Array,
-            default: () => []
+            default: () => [],
         }
     }, 
     methods: {
@@ -32,11 +32,5 @@ export default {
 </script>
 
 <style scoped>
-.select {
-    align-self: flex-end;
-    padding: 10px 15px;
-    background: none;
-    color: teal;
-    border: 1px solid teal;
-}
+
 </style>
