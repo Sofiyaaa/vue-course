@@ -25,7 +25,7 @@
     </my-dialog>
     <post-list
       @remove="removePost"
-      v-bind:posts="posts"   
+      :posts="sortedAndSearchedPosts"  
       v-if="!isPostsLoadind"   
     /> <!-- Привязываем посты к компоненту через v-bind, они улетят в PostList в качестве пропсов. Короткая запись :posts="posts" -->
     <div v-else>Идет загрузка...</div>
@@ -115,7 +115,11 @@ import axios from 'axios'
               _limit: this.limit,
             }
           })
+<<<<<<< HEAD
           // this.totalPages = Math.ceil(response.headers['x-total-count'] / this.limit)
+=======
+          // this.totalPages = Math.ceil(response.headers['x-total-count'] / this.limit) // такого header нет в ответе, поэтому ошибка размера массива
+>>>>>>> b083abd312dcdc16d27c4ce6600f1d2c09c97491
           console.log(response)
           this.posts.push(response.data.data)
         } catch(e) {
@@ -127,13 +131,14 @@ import axios from 'axios'
     }, 
     mounted() {
       this.fetchPosts()
-      console.log(this.posts)
+      // console.log(this.posts)
     }, 
 
 /* тут надо сделать сортировку по году и по названию.
 одну в watch другую в computed. Я не понимаю что не так
 и не помню что работает, а что нет */
     watch: {
+<<<<<<< HEAD
       selectedSort(newValue) {
         if (newValue === 'title') {          
           this.posts.sort((post1, post2) => {
@@ -157,6 +162,23 @@ import axios from 'axios'
     //   } 
     // },
     // }
+=======
+      selectedSort() {
+        this.posts.sort((post1, post2) => post1.year - post2.year)     
+      }
+    },
+
+    computed: {
+      selectedSortedPosts() {
+        // return [...this.posts].sort((post1, post2) => post1.name === post2.name)
+        return [...this.posts].reverse();
+      }, 
+      sortedAndSearchedPosts() {
+        // return this.selectedSortedPosts.filter(post => post.name.includes(this.searchQuery))
+        return this.posts.filter(p => p.name?.includes(this.searchQuery) || p.year == this.searchQuery);
+      } 
+    },
+>>>>>>> b083abd312dcdc16d27c4ce6600f1d2c09c97491
 
   }
 </script>
