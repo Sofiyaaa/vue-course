@@ -25,12 +25,22 @@
     </my-dialog>
     <post-list
       @remove="removePost"
-      :posts="sortedAndSearchedPosts"  
+      :posts="searchedPosts"  
       v-if="!isPostsLoadind"   
     /> <!-- Привязываем посты к компоненту через v-bind, они улетят в PostList в качестве пропсов. Короткая запись :posts="posts" -->
     <div v-else>Идет загрузка...</div>
     <div class="page__wrapper">
-      <div v-for="page in totalPages">{{ page }}</div>
+      <div 
+        v-for="pageNumber in totalPages"
+        :key="pageNumber"
+        class="page"
+        :class="{
+          'current-page': this.page === pageNumber
+        }"
+        @click="changePage(pageNumber)"
+      >
+        {{ pageNumber }}
+      </div>
     </div>
   </div>
 </template>
@@ -87,8 +97,8 @@ import axios from 'axios'
         ],
         searchQuery: '',
         page: 1,
-        limit: 10,
-        totalPage: 0,
+        limit: 7,
+        totalPages: 0,
       }
     }, 
     methods: {
@@ -106,6 +116,10 @@ import axios from 'axios'
       showDialog() {
         this.dialogVisible = true
       },   
+      changePage(pageNumber) {
+        this.page = pageNumber
+        this.fetchPosts()
+      },
       async fetchPosts() {
         try {
           this.isPostsLoadind = true
@@ -115,11 +129,8 @@ import axios from 'axios'
               _limit: this.limit,
             }
           })
-<<<<<<< HEAD
           // this.totalPages = Math.ceil(response.headers['x-total-count'] / this.limit)
-=======
-          // this.totalPages = Math.ceil(response.headers['x-total-count'] / this.limit) // такого header нет в ответе, поэтому ошибка размера массива
->>>>>>> b083abd312dcdc16d27c4ce6600f1d2c09c97491
+          this.totalPages = Math.ceil(this.posts.length / this.limit)
           console.log(response)
           this.posts.push(response.data.data)
         } catch(e) {
@@ -131,26 +142,30 @@ import axios from 'axios'
     }, 
     mounted() {
       this.fetchPosts()
-      // console.log(this.posts)
     }, 
 
 /* тут надо сделать сортировку по году и по названию.
 одну в watch другую в computed. Я не понимаю что не так
 и не помню что работает, а что нет */
     watch: {
-<<<<<<< HEAD
       selectedSort(newValue) {
-        if (newValue === 'title') {          
-          this.posts.sort((post1, post2) => {
-          return post1.title?.localeCompare(post2.title); 
-      });      
-        } else if (newValue === 'year') {
+        switch (newValue) {
+        case 'title':
+          this.posts.sort((post1, post2) =>
+          post1.name?.localeCompare(post2.name));
+        break;
+        case 'year':
+          console.log('name');
           this.posts.sort((post1, post2) => post1.year - post2.year)
-        } 
-      } 
+        break;
+      }
+    }
     },
 
-    // computed: {
+    computed: {
+      searchedPosts() {
+        return this.posts.filter(p => p.name?.toLowerCase().includes(this.searchQuery.toLowerCase()) || p.year == this.searchQuery)
+      }
       // sortedPosts() {
       //   return [...this.posts].sort((post1, post2) => post1.year - post2.year)
       // }, 
@@ -161,24 +176,7 @@ import axios from 'axios'
     //     return this.sortedPosts.filter(post => post.title.toLowerCase().includes(this.searchQuery.toLowerCase()))
     //   } 
     // },
-    // }
-=======
-      selectedSort() {
-        this.posts.sort((post1, post2) => post1.year - post2.year)     
-      }
-    },
-
-    computed: {
-      selectedSortedPosts() {
-        // return [...this.posts].sort((post1, post2) => post1.name === post2.name)
-        return [...this.posts].reverse();
-      }, 
-      sortedAndSearchedPosts() {
-        // return this.selectedSortedPosts.filter(post => post.name.includes(this.searchQuery))
-        return this.posts.filter(p => p.name?.includes(this.searchQuery) || p.year == this.searchQuery);
-      } 
-    },
->>>>>>> b083abd312dcdc16d27c4ce6600f1d2c09c97491
+    }
 
   }
 </script>
@@ -198,6 +196,20 @@ import axios from 'axios'
   display: flex;
   justify-content: space-between;
   margin: 15px 15px;
+}
+
+.page__wrapper {
+  display: flex;
+  margin-top: 15px;
+}
+
+.page {
+  border: 1px solid black;
+  padding: 10px;
+}
+
+.current-page {
+  border: 2px solid teal;
 }
 </style>
 
