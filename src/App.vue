@@ -29,6 +29,7 @@
       v-if="!isPostsLoadind"   
     /> <!-- Привязываем посты к компоненту через v-bind, они улетят в PostList в качестве пропсов. Короткая запись :posts="posts" -->
     <div v-else>Идет загрузка...</div>
+    <!-- КНОПКИ ДЛЯ ПЕРЕКЛЮЧЕНИЯ СТРАНИЦ -->
     <div class="page__wrapper">
       <div 
         v-for="pageNumber in totalPages"
@@ -116,6 +117,7 @@ import axios from 'axios'
       showDialog() {
         this.dialogVisible = true
       },   
+      // МЕНЯЮ НОМЕР И ПОДГРУЖАЮ ПОСТЫ
       changePage(pageNumber) {
         this.page = pageNumber
         this.fetchPosts()
@@ -130,6 +132,7 @@ import axios from 'axios'
             }
           })
           // this.totalPages = Math.ceil(response.headers['x-total-count'] / this.limit)
+          // ТУТ СЧИТАЮ КОЛ-ВО СТРАНИЦ 
           this.totalPages = Math.ceil(this.posts.length / this.limit)
           console.log(response)
           this.posts.push(response.data.data)
@@ -144,38 +147,25 @@ import axios from 'axios'
       this.fetchPosts()
     }, 
 
-/* тут надо сделать сортировку по году и по названию.
-одну в watch другую в computed. Я не понимаю что не так
-и не помню что работает, а что нет */
     watch: {
       selectedSort(newValue) {
-        switch (newValue) {
-        case 'title':
-          this.posts.sort((post1, post2) =>
-          post1.name?.localeCompare(post2.name));
-        break;
-        case 'year':
-          console.log('name');
-          this.posts.sort((post1, post2) => post1.year - post2.year)
-        break;
+          switch (newValue) {
+          case 'title':
+            this.posts.sort((post1, post2) =>
+            post1.name?.localeCompare(post2.name));
+          break;
+          case 'year':
+            console.log('name');
+            this.posts.sort((post1, post2) => post1.year - post2.year)
+          break;
+        }
       }
-    }
     },
 
     computed: {
       searchedPosts() {
         return this.posts.filter(p => p.name?.toLowerCase().includes(this.searchQuery.toLowerCase()) || p.year == this.searchQuery)
       }
-      // sortedPosts() {
-      //   return [...this.posts].sort((post1, post2) => post1.year - post2.year)
-      // }, 
-
-    // этот метод для поиска, поиск тоже не работает, надо чтоб работал
-
-    //   sortedAndSearchedPosts() {
-    //     return this.sortedPosts.filter(post => post.title.toLowerCase().includes(this.searchQuery.toLowerCase()))
-    //   } 
-    // },
     }
 
   }
