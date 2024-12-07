@@ -7,6 +7,10 @@
         </div>
         <div class="post__btns">
             <my-button 
+                @click="$emit('open', post)">
+                Открыть
+            </my-button>
+            <my-button 
                 @click="$emit('remove', post)">
                 Удалить
             </my-button>
@@ -33,6 +37,10 @@ export default {
     padding: 15px;
     border: 2px solid teal;
     margin-top: 15px;
+}
+
+.post__btns {
+    display: flex;
 }
 </style>
 
