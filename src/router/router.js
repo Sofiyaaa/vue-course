@@ -1,11 +1,11 @@
 import Main from '@/pages/Main'
 import PostPage from '@/pages/PostPage'
 import About from '@/pages/About'
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
     {
-        path: '/',
+        path: '',
         component: Main,
     },  
     {
@@ -19,8 +19,8 @@ const routes = [
 ]
 
 const router = createRouter({
-    routes, 
-    history: createWebHashHistory(process.env.BASE_URL) // передаем переменную окружения (опционально)
+    history: createWebHistory(), // передаем переменную окружения (опционально)
+    routes
 })
 
 export default router
