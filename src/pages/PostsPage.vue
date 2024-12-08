@@ -13,6 +13,7 @@
       <post-form @click.stop @create="createPost" />
     </my-dialog>
     <post-list 
+      @open="goToPostPageById" 
       @remove="removePost" 
       :posts="searchedPosts" 
       v-if="!isPostsLoading" 
@@ -97,7 +98,14 @@ export default {
     inputValue(event) {
       this.title = event.target.value;
     },
+    goToPostPageById(post) {
+      console.log("еууе");
+      
+      this.$router.push('/posts/' + post.id)
+    },
     removePost(post) {
+      console.log("test");
+      
       // в массив попадают те посты, ид кот не = посту, кот мы передаем в парам ф-ии
       this.posts = this.posts.filter(p => p.id !== post.id)
     },

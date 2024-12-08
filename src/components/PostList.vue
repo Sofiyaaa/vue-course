@@ -6,6 +6,7 @@
             v-for="post in posts"
             :post="post"
             :key="post.id"
+            @open="$emit('open', post)" 
             @remove="$emit('remove', post)" 
         /> <!-- передаем событие дальше наверх -->
         </transition-group>
