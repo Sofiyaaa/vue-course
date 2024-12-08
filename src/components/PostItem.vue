@@ -7,7 +7,7 @@
         </div>
         <div class="post__btns">
             <my-button 
-                @click="$emit('open', post)">
+                @click="this.$refs.push(`/post/${post.id}`)">
                 Открыть
             </my-button>
             <my-button 

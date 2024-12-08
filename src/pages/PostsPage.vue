@@ -13,14 +13,13 @@
       <post-form @click.stop @create="createPost" />
     </my-dialog>
     <post-list 
-      @open="goToPostPageById" 
       @remove="removePost" 
       :posts="searchedPosts" 
       v-if="!isPostsLoading" 
     />
     <!-- Привязываем посты к компоненту через v-bind, они улетят в PostList в качестве пропсов. Короткая запись :posts="posts" -->
     <div v-else>Идет загрузка...</div>
-    <div ref="observer" class="observer"></div>
+    <div v-intersection="loadMorePosts" class="observer"></div>
 
     <!-- КНОПКИ ДЛЯ ПЕРЕКЛЮЧЕНИЯ СТРАНИЦ -->
     <!-- <div class="page__wrapper">
@@ -98,9 +97,6 @@ export default {
     inputValue(event) {
       this.title = event.target.value;
     },
-    goToPostPageById(post) {      
-      this.$router.push('/posts/' + post.id)
-    },
     removePost(post) {      
       // в массив попадают те посты, ид кот не = посту, кот мы передаем в парам ф-ии
       this.posts = this.posts.filter(p => p.id !== post.id)
@@ -130,8 +126,7 @@ export default {
       }
     },
     async loadMorePosts() {
-      try {
-        
+      try {      
         const response = await axios.get('https://reqres.in/api/posts', {
           params: {
             page: this.page
@@ -147,26 +142,7 @@ export default {
     },
   },
   mounted() {
-   // this.fetchPosts()
-
-    /* после монтирования сразу начинаем следить за блоком observed, чтобы зарегестрировать колбек ф-ю 
-    кот выполнится когда мы пересекли какой-то элемент  */ 
-    const options = {
-      root: document.querySelector("#scrollArea"), // область видимости браузера (по умолчанию)
-      rootMargin: "0px",
-      threshold: 1.0,
-    };
-    /* callback - та ф-я кот отработает когда мы пересекли необходимый элемент
-    observer - создаваемый на основании этой ф-ии объект */
-    const callback = (entries, observer) => {
-      if (entries[0].isIntersecting) {
-        this.loadMorePosts()
-        // console.log('entries: ', entries) изнач-но массив сост-ий из 1 объекта, таргетом этого боъекта явл див за кот мы наблюдаем
-      } 
-    }
-    const observer = new IntersectionObserver(callback, options);
-    /* observer - наблюдает за всей стр, в парам указ за каким эл надо наблюдать  */
-    observer.observe(this.$refs.observer)
+    this.fetchPosts()
   },
   watch: {
     selectedSort(newValue) {
