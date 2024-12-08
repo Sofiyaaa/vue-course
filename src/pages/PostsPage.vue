@@ -98,14 +98,10 @@ export default {
     inputValue(event) {
       this.title = event.target.value;
     },
-    goToPostPageById(post) {
-      console.log("еууе");
-      
+    goToPostPageById(post) {      
       this.$router.push('/posts/' + post.id)
     },
-    removePost(post) {
-      console.log("test");
-      
+    removePost(post) {      
       // в массив попадают те посты, ид кот не = посту, кот мы передаем в парам ф-ии
       this.posts = this.posts.filter(p => p.id !== post.id)
     },
